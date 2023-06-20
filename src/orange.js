@@ -57,7 +57,7 @@ function parseObj(fileContent) {
       } else if (parts[0] === "f") {
         const faceVertices = [];
         const faceTexCoords = [];
-        const faceNormals = [];
+        const faceNormales = [];
 
         for (let j = 1; j < parts.length; j++) {
           const indices = parts[j].split("/");
@@ -69,13 +69,13 @@ function parseObj(fileContent) {
           faceTexCoords.push(texCoordIndex);
 
           const normalIndex = parseInt(indices[2]) - 1;
-          faceNormals.push(normalIndex);
+          faceNormales.push(normalIndex);
         }
   
         faces.push({
           vertices: faceVertices,
           texCoords: faceTexCoords,
-          normals: faceNormals,
+          normals: faceNormales,
         });
       }
     }

@@ -33,7 +33,7 @@ const fs = `
   uniform sampler2D sampler;
 
   void main () {
-    float shininessVal = 20.0;
+    float shininessVal = 5.0;
     float Kd = 1.0;
     float Ks = 1.0;
     float Ka = 0.4;
@@ -41,10 +41,20 @@ const fs = `
     vec3 ambientColor = vec3(1.0, 0.0, 0.0);
     vec3 diffuseColor = vec3(1.0, 0.5, 0.0);
     vec3 specularColor = vec3(1.0, 1.0, 1.0);
-
-    vec3 normalMap = v_normal + vec3(texture2D(sampler, v_texcoord));
     
-    vec3 N = normalize(normalMap * 2.0 - 1.0);
+    float step = 0.01;
+    
+    vec3 xLeft = texture2D(sampler, vec2(v_texcoord.x - step, v_texcoord.y)).rgb;
+    vec3 xRight = texture2D(sampler, vec2(v_texcoord.x + step, v_texcoord.y)).rgb;
+    vec3 yBottom = texture2D(sampler, vec2(v_texcoord.x, v_texcoord.y - step)).rgb;
+    vec3 yTop = texture2D(sampler, vec2(v_texcoord.x, v_texcoord.y + step)).rgb;
+
+    vec3 xGrad = (xLeft - xRight);
+    vec3 yGrad = (yBottom - yTop); 
+        
+    vec3 normal = v_normal + v_texcoord.x * xGrad + v_texcoord.y * yGrad;
+    
+    vec3 N = normalize(normal);
     vec3 L = normalize(u_lightDirection);
     float lambertian = max(dot(N, L), 0.0);
 
